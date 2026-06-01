@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BDO Proje — Demo</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <style>
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
+        /* TraCI panel — diğer panellerle stil tutarlı kalsın */
+        .traci-metric-row {
+            display: grid;
+            grid-template-columns: 1fr auto auto auto auto;
+            gap: 0.5rem;
+            align-items: center;
+            padding: 0.45rem 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.06);
+            font-size: 0.78rem;
+        }
+        .traci-metric-row:last-child { border-bottom: none; }
+        .traci-metric-label {
+            color: var(--muted);
+            font-size: 0.72rem;
+        }
+        .traci-metric-before, .traci-metric-after {
+            font-family: 'Space Mono', monospace;
+            color: #e2e8f0;
+        }
+        .traci-metric-before { opacity: 0.6; }
+        .traci-metric-arrow { color: var(--muted); font-size: 0.7rem; }
+        .traci-metric-diff {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 3px;
+            min-width: 60px;
+            text-align: center;
+        }
+        .traci-metric-diff.is-good {
+            color: #4ade80;
+            background: rgba(74, 222, 128, 0.1);
+        }
+        .traci-metric-diff.is-bad {
+            color: #f87171;
+            background: rgba(248, 113, 113, 0.1);
+        }
+        .traci-metric-diff.is-neutral {
+            color: var(--muted);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .sumo-launch-block {
+            margin-top: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid var(--border);
+        }
+        .sumo-launch-block .sumo-launch-label {
+            font-size: 0.7rem;
+            color: var(--muted);
+            margin-bottom: 0.35rem;
+        }
+        .sumo-launch-cmd {
+            background: #0f1117;
+            border-radius: 4px;
+            padding: 0.5rem 0.7rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.68rem;
+            color: #4ade80;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-bottom: 0.4rem;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .sumo-launch-cmd:hover {
+            background: #1a1d24;
+        }
+        .sumo-launch-cmd .cmd-copy-icon {
+            font-size: 0.62rem;
+            color: var(--muted);
+            font-family: inherit;
+        }
+        .sumo-launch-cmd.copied {
+            color: #fbbf24;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <a href="index.html" class="logo">
+            <span class="logo-badge">BDO</span>
+            Proje
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Ana Sayfa</a></li>
+            <li><a href="about.html">Hakkında</a></li>
+            <li><a href="tool.html" class="active">Demo</a></li>
+            <li><a href="contact.html">Ekip</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section>
+    <div class="section-label">Optimizasyon Paneli</div>
+    <h1 class="section-title" style="margin-bottom: 0.5rem;">Çalışma Alanı</h1>
+    <p class="section-sub">L-Sistemi + Gemini AI + SUMO (TraCI). Önce/sonra mikrosimülasyon karşılaştırması.</p>
+
+    <div class="tool-layout">
+
+        <!-- Control Panel -->
+        <div style="display: flex; flex-direction: column; gap: 1.2rem;">
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-title">Yapılandırma</span>
+                    <div class="status-indicator" title="Hazır"></div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label>Veri Kaynağı</label>
+                        <select id="dataSource">
+                            <option value="lsystem">Sentetik Üretim (L-Sistemi)</option>
+                            <option value="osm">Gerçek Harita (OpenStreetMap)</option>
+                        </select>
+                    </div>
+
+                    <!-- L-System kontrolleri -->
+                    <div id="lsystemControls">
+                        <div class="form-group">
+                            <label>Şehir Tipi (L-Sistem Kuralı)</label>
+                            <select id="lsystemPreset">
+                                <option value="default">Karışık (Varsayılan)</option>
+                                <option value="grid">Manhattan Grid</option>
+                                <option value="organic">Organik (Eski Kasaba)</option>
+                                <option value="radial">Radyal (Paris)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Ağaç İterasyonu</label>
+                            <input type="number" id="iterations" value="2" min="1" max="5">
+                        </div>
+                        <div class="form-group">
+                            <label>Snapping Eşiği</label>
+                            <input type="number" id="snapping" value="5">
+                        </div>
+                    </div>
+
+                    <!-- OSM kontrolleri -->
+                    <div id="osmControls" style="display:none;">
+                        <div class="form-group">
+                            <label>Konum</label>
+                            <select id="osmPreset">
+                                <option value="39.7523,30.4874">ESOGÜ Meşelik Kampüsü</option>
+                                <option value="39.7767,30.5206">Eskişehir Merkez (Porsuk)</option>
+                                <option value="39.7839,30.5144">Odunpazarı Tarihi Bölge ⭐</option>
+                                <option value="39.7906,30.5265">Eskişehir Otogar</option>
+                                <option value="39.7700,30.5180">Eskişehir Tepebaşı (Yoğun)</option>
+                                <option value="custom">Özel Koordinat...</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="osmCustomGroup" style="display:none;">
+                            <label>Enlem, Boylam</label>
+                            <input type="text" id="osmCustom" placeholder="39.7504, 30.4833">
+                        </div>
+                        <div class="form-group">
+                            <label>Yarıçap (metre)</label>
+                            <input type="number" id="osmRadius" value="500" min="100" max="2000" step="100">
+                        </div>
+                    </div>
+
+                    <!-- Sürücü sayısı -->
+                    <div class="form-group">
+                        <label>Sürücü Sayısı (Simülasyon)</label>
+                        <input type="number" id="tripsInput" value="800" min="50" max="2000" step="50">
+                    </div>
+
+                    <!-- TraCI ayarları -->
+                    <div class="form-group">
+                        <label>SUMO/TraCI Süresi (saniye)</label>
+                        <input type="number" id="traciDuration" value="150" min="60" max="600" step="30">
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" id="runTraci" checked
+                                   style="width: auto; margin: 0;">
+                            <span>Gerçek SUMO simülasyonu koştur</span>
+                        </label>
+                        <p style="font-size: 0.68rem; color: var(--muted); margin-top: 0.3rem; line-height: 1.4;">
+                            ⚠ Kapatınca sadece Python (Dijkstra) ile hızlı tahmin. Açıkken her TraCI ölçümü ~30-90s sürer.
+                        </p>
+                    </div>
+
+                    <button class="run-btn" id="runPipelineBtn" type="button">
+                        <span>▶</span> Pipeline'ı Çalıştır
+                    </button>
+                </div>
+            </div>
+
+            <!-- ÖNCE / SONRA: Python Dijkstra karşılaştırma -->
+            <div class="panel" id="comparePanel" style="display:none;">
+                <div class="panel-header">
+                    <span class="panel-title">Bypass Etkisi (Python Sim)</span>
+                </div>
+                <div class="panel-body">
+                    <div class="compare-grid">
+                        <div class="compare-row">
+                            <div class="compare-label">Max Yük</div>
+                            <div class="compare-before" id="cmpMaxBefore">—</div>
+                            <div class="compare-arrow">→</div>
+                            <div class="compare-after" id="cmpMaxAfter">—</div>
+                            <div class="compare-diff" id="cmpMaxDiff">—</div>
+                        </div>
+                        <div class="compare-row">
+                            <div class="compare-label">Ort. Yük</div>
+                            <div class="compare-before" id="cmpAvgBefore">—</div>
+                            <div class="compare-arrow">→</div>
+                            <div class="compare-after" id="cmpAvgAfter">—</div>
+                            <div class="compare-diff" id="cmpAvgDiff">—</div>
+                        </div>
+                    </div>
+
+                    <div class="view-mode-toggle" id="viewMode">
+                        <label class="view-mode-option">
+                            <input type="radio" name="viewMode" value="before">
+                            <span>Önce</span>
+                        </label>
+                        <label class="view-mode-option">
+                            <input type="radio" name="viewMode" value="after" checked>
+                            <span>Sonra</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- YENİ: SUMO/TraCI Mikrosimülasyon Sonuçları -->
+            <div class="panel" id="traciPanel" style="display:none;">
+                <div class="panel-header">
+                    <span class="panel-title">SUMO Mikrosimülasyon (TraCI)</span>
+                    <span style="font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--muted);"
+                          id="traciDurationLabel">—</span>
+                </div>
+                <div class="panel-body">
+                    <div id="traciMetrics">
+                        <!-- JS doldurur -->
+                    </div>
+
+                    <div class="sumo-launch-block" id="sumoLaunchBlock" style="display:none;">
+                        <div class="sumo-launch-label">SUMO GUI'de aç (kopyala-yapıştır):</div>
+                        <div id="sumoLaunchCmds"></div>
+                        <p style="font-size: 0.62rem; color: var(--muted); margin-top: 0.4rem; line-height: 1.5;">
+                            Terminale yapıştır, ▶ Play tuşuna bas. Sağ üstte Delay = 200ms yap.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ağ istatistikleri -->
+            <div class="panel" id="statsPanel" style="display:none;">
+                <div class="panel-header">
+                    <span class="panel-title">Ağ İstatistikleri</span>
+                    <span class="stats-source-badge" id="statsSource">—</span>
+                </div>
+                <div class="panel-body">
+                    <div class="stats-grid">
+                        <div class="stat-cell">
+                            <div class="stat-cell-label">Kavşak</div>
+                            <div class="stat-cell-value" id="statNodes">—</div>
+                        </div>
+                        <div class="stat-cell">
+                            <div class="stat-cell-label">Yol Segmenti</div>
+                            <div class="stat-cell-value" id="statEdges">—</div>
+                        </div>
+                        <div class="stat-cell">
+                            <div class="stat-cell-label">Ort. Bağlantı</div>
+                            <div class="stat-cell-value" id="statAvgDeg">—</div>
+                        </div>
+                        <div class="stat-cell">
+                            <div class="stat-cell-label">AI Bypass</div>
+                            <div class="stat-cell-value" id="statAI">—</div>
+                        </div>
+                    </div>
+                    <div class="sumo-status" id="sumoStatus"></div>
+                </div>
+            </div>
+
+            <!-- Kullanım -->
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-title">Kullanım</span>
+                </div>
+                <div class="panel-body">
+                    <p style="font-size: 0.8rem; color: var(--muted); line-height: 1.75;">
+                        Lokal Python sunucusuna bağlanır:
+                    </p>
+                    <div style="margin-top: 0.8rem; background: #0f1117; border-radius: 4px; padding: 0.75rem 1rem; font-family: 'Space Mono', monospace; font-size: 0.72rem; color: #4ade80; line-height: 1.8;">
+                        <span style="color: rgba(255,255,255,0.3)">$</span> uvicorn backend.api_server:app
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map & Console -->
+        <div class="map-container">
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-title">Ağ Görüntüleyici</span>
+                    <span style="font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted);" id="nodeCount">—</span>
+                </div>
+                <div id="mapDisplay">
+                    <div class="map-legend" id="mapLegend" style="display:none;">
+                        <div style="font-weight:700; padding-bottom:4px; border-bottom:1px solid var(--border); margin-bottom:6px;">
+                            Trafik Yükü
+                        </div>
+                        <div class="legend-row"><span class="legend-swatch" style="background:#4ade80;"></span>Rahat</div>
+                        <div class="legend-row"><span class="legend-swatch" style="background:#eab308;"></span>Orta</div>
+                        <div class="legend-row"><span class="legend-swatch" style="background:#f97316;"></span>Yoğun</div>
+                        <div class="legend-row"><span class="legend-swatch" style="background:#dc2626;"></span>Darboğaz</div>
+                        <div style="margin-top:6px; padding-top:6px; border-top:1px solid var(--border);">
+                            <div class="legend-row"><span class="legend-swatch legend-ai"></span>AI Bypass</div>
+                            <div class="legend-row"><span class="legend-swatch legend-node"></span>Kavşak</div>
+                        </div>
+                    </div>
+
+                    <div class="map-tooltip" id="mapTooltip" style="display:none;"></div>
+                    <div id="leafletMap" style="display:none;"></div>
+
+                    <div class="map-empty-state">
+                        <div class="empty-icon">🗺️</div>
+                        <p>// HALİ HAZIRDA VERİ YOK</p>
+                        <p style="font-size: 0.72rem; margin-top: 0.4rem; opacity: 0.6;">Pipeline'ı çalıştırın</p>
+                    </div>
+                </div>
+            </div>
+            <div class="console-box" id="consoleLog">
+                <span style="color: rgba(255,255,255,0.3)">// BDO Proje v2.0 — Terminal</span><br>
+                <span>> Sistem hazır. Komut bekleniyor...</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <span class="footer-logo">BDO Proje</span>
+    <span>© 2026 - Eskişehir Osmangazi Üniversitesi</span>
+</footer>
+
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<configuration>
+  <input>
+    <net-file value="network.net.xml"/>
+    <route-files value="network.rou.xml"/>
+  </input>
+  <time>
+    <begin value="0"/>
+    <end value="600"/>
+  </time>
+  <processing>
+    <ignore-route-errors value="true"/>
+    <time-to-teleport value="120"/>
+  </processing>
+</configuration>

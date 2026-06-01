@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BDO Proje — Hakkında</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+    <nav>
+        <a href="index.html" class="logo">
+            <span class="logo-badge">BDO</span>
+            Proje
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Ana Sayfa</a></li>
+            <li><a href="about.html" class="active">Hakkında</a></li>
+            <li><a href="tool.html">Demo</a></li>
+            <li><a href="contact.html">Ekip</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section>
+    <div class="section-label">Proje Hakkında</div>
+    <h1 class="section-title">Sistem Mimarisi</h1>
+    <p class="section-sub">BDO Proje, şehir planlamacıları ve trafik mühendisleri için tasarlanmış, çok katmanlı bir AI optimizasyon altyapısıdır.</p>
+
+    <div class="arch-grid">
+        <div class="arch-card fade-up">
+            <div class="arch-card-title">
+                <span class="arch-badge">01</span>
+                Üretim Motoru — C++ L-Sistemi
+            </div>
+            <p>Lindenmayer sistemleri (L-sistemleri), biyolojik büyüme modellerinden ilham alır. Projemizde bu formalizm, şehir yol ağlarının üretiminde kullanılır. Her iterasyonda üretim kuralları uygulanarak fraktal yapılar elde edilir.</p>
+            <div class="tech-chips">
+                <span class="chip">C++17</span>
+                <span class="chip">L-SYSTEM</span>
+                <span class="chip">FRAKTAL</span>
+                <span class="chip">CFG</span>
+            </div>
+        </div>
+
+        <div class="arch-card fade-up delay-1">
+            <div class="arch-card-title">
+                <span class="arch-badge">02</span>
+                Veri Ayrıştırma — TOON Format
+            </div>
+            <p>C++ motorundan çıkan ham string verisi, özel Python parser'ımız aracılığıyla TOON (Traffic Object Notation) formatına dönüştürülür. Bu adımda halüsinasyon filtreleri, geometrik tutarsızlıkları ve izole düğümleri eler.</p>
+            <div class="tech-chips">
+                <span class="chip">PYTHON</span>
+                <span class="chip">TOON</span>
+                <span class="chip">REGEX</span>
+                <span class="chip">GRAPH</span>
+            </div>
+        </div>
+
+        <div class="arch-card fade-up delay-2">
+            <div class="arch-card-title">
+                <span class="arch-badge">03</span>
+                AI Analiz — Gemini LLM
+            </div>
+            <p>Yapılandırılmış TOON verisi, Gemini LLM'e gönderilir. Model, tıkanıklık noktalarını (yüksek derece kavşaklar), çıkmaz sokakları ve izole bölgeleri tespit eder; ardından mantıksal bypass rotaları önerir.</p>
+            <div class="tech-chips">
+                <span class="chip">GEMINI</span>
+                <span class="chip">PROMPT ENG.</span>
+                <span class="chip">JSON MODE</span>
+            </div>
+        </div>
+
+        <div class="arch-card fade-up delay-3">
+            <div class="arch-card-title">
+                <span class="arch-badge">04</span>
+                Doğrulama — SUMO Simülatörü
+            </div>
+            <p>LLM önerileri uygulandıktan sonra, nihai ağ .net.xml formatına çevrilerek Eclipse SUMO trafik simülatörüne aktarılır. Simülasyon sonuçları, optimizasyonun etkinliğini kanıtlar veya red eder.</p>
+            <div class="tech-chips">
+                <span class="chip">SUMO</span>
+                <span class="chip">.NET.XML</span>
+                <span class="chip">SIMULATION</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tech Stack Summary -->
+    <div style="margin-top: 3rem; background: var(--ink); color: var(--paper); border-radius: 8px; padding: 2.5rem; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 0; right: 0; width: 300px; height: 300px; background: radial-gradient(circle, rgba(37,99,168,0.3) 0%, transparent 70%); pointer-events: none;"></div>
+        <div style="font-family: 'Space Mono', monospace; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(245,243,238,0.4); margin-bottom: 1.5rem;">// TEKNOLOJİ YIĞINI</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1.5rem; position: relative;">
+            <div>
+                <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">⚙️</div>
+                <div style="font-weight: 700; font-size: 0.9rem;">C++17</div>
+                <div style="font-size: 0.78rem; color: rgba(245,243,238,0.5); margin-top: 0.25rem;">L-System Motoru</div>
+            </div>
+            <div>
+                <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🐍</div>
+                <div style="font-weight: 700; font-size: 0.9rem;">Python + FastAPI</div>
+                <div style="font-size: 0.78rem; color: rgba(245,243,238,0.5); margin-top: 0.25rem;">Backend & Parser</div>
+            </div>
+            <div>
+                <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🤖</div>
+                <div style="font-weight: 700; font-size: 0.9rem;">Gemini LLM</div>
+                <div style="font-size: 0.78rem; color: rgba(245,243,238,0.5); margin-top: 0.25rem;">AI Analiz Motoru</div>
+            </div>
+            <div>
+                <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🚦</div>
+                <div style="font-weight: 700; font-size: 0.9rem;">Eclipse SUMO</div>
+                <div style="font-size: 0.78rem; color: rgba(245,243,238,0.5); margin-top: 0.25rem;">Trafik Simülasyonu</div>
+            </div>
+            <div>
+                <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">📊</div>
+                <div style="font-weight: 700; font-size: 0.9rem;">D3.js</div>
+                <div style="font-size: 0.78rem; color: rgba(245,243,238,0.5); margin-top: 0.25rem;">Ağ Görselleştirme</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <span class="footer-logo">BDO Proje</span>
+    <span>© 2026 - Eskişehir Osmangazi Üniversitesi</span>
+</footer>
+
+</body>
+</html>

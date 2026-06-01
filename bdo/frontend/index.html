@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BDO Proje — Trafik Optimizasyon Sistemi</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+    <nav>
+        <a href="index.html" class="logo">
+            <span class="logo-badge">BDO</span>
+            Proje
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">Ana Sayfa</a></li>
+            <li><a href="about.html">Hakkında</a></li>
+            <li><a href="tool.html">Demo</a></li>
+            <li><a href="contact.html">Ekip</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="hero">
+    <div class="hero-left">
+        <div class="hero-tag">
+            <span>●</span> Biçimsel Diller & Otomata — Proje
+        </div>
+        <h1 class="hero-title">
+            Yapay Zeka ile<br>
+            <em>Akıllı</em> Trafik<br>
+            Optimizasyonu.
+        </h1>
+        <p class="hero-desc">
+            L-Sistemi gramerleriyle sentetik şehir ağları üretin. Gemini LLM motorumuz tıkanıklıkları analiz etsin, SUMO simülatöründe doğrulanmış çözümler sunsun.
+        </p>
+        <div class="hero-actions">
+            <a href="tool.html" class="btn-primary">
+                Demoyu Çalıştır →
+            </a>
+            <a href="about.html" class="btn-secondary">
+                Mimariyi İncele
+            </a>
+        </div>
+    </div>
+    <div class="hero-visual fade-up delay-2">
+        <div class="automata-diagram">
+            <div class="diagram-header">// L-SİSTEMİ DURUM MAKİNESİ</div>
+            <svg class="diagram-svg" viewBox="0 0 380 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- States -->
+                <circle cx="60" cy="100" r="28" stroke="#4ade80" stroke-width="1.5" fill="rgba(74,222,128,0.05)"/>
+                <circle cx="60" cy="100" r="22" stroke="#4ade80" stroke-width="0.5" stroke-dasharray="3 2" fill="none"/>
+                <text x="60" y="95" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#4ade80">q₀</text>
+                <text x="60" y="107" text-anchor="middle" font-family="Space Mono" font-size="6" fill="rgba(74,222,128,0.5)">INIT</text>
+
+                <circle cx="170" cy="60" r="28" stroke="#60a5fa" stroke-width="1.5" fill="rgba(96,165,250,0.05)"/>
+                <text x="170" y="55" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#60a5fa">q₁</text>
+                <text x="170" y="67" text-anchor="middle" font-family="Space Mono" font-size="6" fill="rgba(96,165,250,0.5)">GEN</text>
+
+                <circle cx="170" cy="145" r="28" stroke="#f472b6" stroke-width="1.5" fill="rgba(244,114,182,0.05)"/>
+                <text x="170" y="140" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#f472b6">q₂</text>
+                <text x="170" y="152" text-anchor="middle" font-family="Space Mono" font-size="6" fill="rgba(244,114,182,0.5)">PARSE</text>
+
+                <circle cx="290" cy="100" r="28" stroke="#fb923c" stroke-width="1.5" fill="rgba(251,146,60,0.05)"/>
+                <circle cx="290" cy="100" r="22" stroke="#fb923c" stroke-width="0.5" fill="none"/>
+                <text x="290" y="95" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#fb923c">q₃</text>
+                <text x="290" y="107" text-anchor="middle" font-family="Space Mono" font-size="6" fill="rgba(251,146,60,0.5)">ACCEPT</text>
+
+                <!-- Arrows -->
+                <path d="M 88 88 L 142 70" stroke="rgba(255,255,255,0.2)" stroke-width="1" marker-end="url(#arrow)"/>
+                <text x="105" y="72" font-family="Space Mono" font-size="7" fill="rgba(255,255,255,0.35)">F→FF</text>
+
+                <path d="M 88 112 L 142 133" stroke="rgba(255,255,255,0.2)" stroke-width="1" marker-end="url(#arrow)"/>
+                <text x="95" y="135" font-family="Space Mono" font-size="7" fill="rgba(255,255,255,0.35)">X→X[+F]</text>
+
+                <path d="M 195 75 L 265 88" stroke="rgba(255,255,255,0.2)" stroke-width="1" marker-end="url(#arrow)"/>
+                <text x="220" y="72" font-family="Space Mono" font-size="7" fill="rgba(255,255,255,0.35)">LLM</text>
+
+                <path d="M 195 130 L 265 112" stroke="rgba(255,255,255,0.2)" stroke-width="1" marker-end="url(#arrow)"/>
+                <text x="215" y="135" font-family="Space Mono" font-size="7" fill="rgba(255,255,255,0.35)">TOON</text>
+
+                <!-- Start arrow -->
+                <path d="M 20 100 L 32 100" stroke="rgba(255,255,255,0.3)" stroke-width="1" marker-end="url(#arrow)"/>
+
+                <defs>
+                    <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                        <path d="M0,0 L0,6 L6,3 z" fill="rgba(255,255,255,0.3)"/>
+                    </marker>
+                </defs>
+            </svg>
+            <div class="stat-row">
+                <div class="stat-box">
+                    <div class="stat-num">4</div>
+                    <div class="stat-label">Faz</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">C++</div>
+                    <div class="stat-label">Motor</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">LLM</div>
+                    <div class="stat-label">Analiz</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr class="sep">
+
+<!-- Pipeline Section -->
+<section>
+    <div class="section-label">Pipeline</div>
+    <h2 class="section-title">Dört Aşamalı İşlem Hattı</h2>
+    <p class="section-sub">Sentetik üretimden SUMO simülasyonuna — tam otomatik bir optimizasyon akışı.</p>
+
+    <div class="phases-grid">
+        <div class="phase-card fade-up">
+            <div class="phase-num">FAZ 01</div>
+            <div class="phase-icon">⚙️</div>
+            <div class="phase-title">Üretim (C++)</div>
+            <p class="phase-desc">L-Sistemi gramerleriyle fraktal yol ağları türetilir. Her iterasyonda karmaşıklık üstel büyür.</p>
+            <span class="phase-tag">C++ / L-SYSTEM</span>
+        </div>
+        <div class="phase-card fade-up delay-1">
+            <div class="phase-num">FAZ 02</div>
+            <div class="phase-icon">🔬</div>
+            <div class="phase-title">Ayrıştırma (Parser)</div>
+            <p class="phase-desc">Python tabanlı TOON parser, ham veriyi yapılandırır. Halüsinasyon filtreleri tutarsız düğümleri elendirir.</p>
+            <span class="phase-tag">PYTHON / TOON</span>
+        </div>
+        <div class="phase-card fade-up delay-2">
+            <div class="phase-num">FAZ 03</div>
+            <div class="phase-icon">🤖</div>
+            <div class="phase-title">AI Analiz (LLM)</div>
+            <p class="phase-desc">Gemini tıkanıklıkları ve çıkmaz sokakları tespit eder, mantıksal bypass rotaları önerir.</p>
+            <span class="phase-tag">GEMINI LLM</span>
+        </div>
+        <div class="phase-card fade-up delay-3">
+            <div class="phase-num">FAZ 04</div>
+            <div class="phase-icon">🚦</div>
+            <div class="phase-title">Simülasyon (SUMO)</div>
+            <p class="phase-desc">Optimize edilmiş veri anında .net.xml formatına çevrilerek SUMO simülatöründe doğrulanır.</p>
+            <span class="phase-tag">SUMO / XML</span>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <span class="footer-logo">BDO Proje</span>
+    <span>© 2026 — Eskişehir Osmangazi Üniversitesi</span>
+</footer>
+
+</body>
+</html>
